@@ -1,3 +1,3 @@
-module github.com/gtyrin/ds/collection
+module github.com/gtyrin/go-collection
 
 go 1.16
