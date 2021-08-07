@@ -30,8 +30,7 @@ func (m *StrMap) Exists(key string) bool {
 
 // Value возвращает значение ключа или nil, если он не найден.
 func (m *StrMap) Value(key string) string {
-	val, _ := (*m)[key]
-	return val
+	return (*m)[key]
 }
 
 // IsEmpty проверяет коллекцию на пустоту.

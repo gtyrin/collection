@@ -3,6 +3,8 @@ package collection
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type testData struct {
@@ -32,12 +34,8 @@ func TestContainsStr(t *testing.T) {
 
 func TestIndex(t *testing.T) {
 	objs := []string{"John Doe"}
-	if Index("John Doe", objs) != 0 {
-		t.FailNow()
-	}
-	if Index("John Travolta", objs) == 0 {
-		t.FailNow()
-	}
+	assert.Zero(t, Index("John Doe", objs))
+	assert.NotZero(t, Index("John Travolta", objs))
 }
 
 func TestRemoveStr(t *testing.T) {
@@ -59,31 +57,34 @@ func TestSplitWithTrim(t *testing.T) {
 func TestSliceDiff(t *testing.T) {
 	sl1 := []int{1, 2, 3}
 	upd, del, ins := SliceDiff(sl1, []int8{1, 2, 3})
-	if len(ins) != 0 || len(upd) != 0 || len(del) != 0 {
-		t.Fail()
-	}
+	assert.Empty(t, ins)
+	assert.Empty(t, upd)
+	assert.Empty(t, del)
 	sl2 := []int{1, 2, 3}
 	upd, del, ins = SliceDiff(sl1, sl2)
-	if len(ins) != 0 || len(upd) != 0 || len(del) != 0 {
-		t.Fail()
-	}
+	assert.Empty(t, ins)
+	assert.Empty(t, upd)
+	assert.Empty(t, del)
 	sl2[1] = 4
 	upd, del, ins = SliceDiff(sl1, sl2)
-	if len(ins) != 0 || len(upd) != 1 || upd[0].elem != 4 || len(del) != 0 {
-		t.Fail()
-	}
+	assert.Empty(t, ins)
+	assert.Len(t, upd, 1)
+	assert.Equal(t, upd[0].elem, 4)
+	assert.Empty(t, del)
 	sl2 = append(sl2[:1], sl2[2])
 	upd, del, ins = SliceDiff(sl1, sl2) // {1,2,3} vs {1,3}
-	if len(ins) != 0 || len(upd) != 0 || len(del) != 1 || del[0].elem != 2 {
-		t.Fail()
-	}
+	assert.Empty(t, ins)
+	assert.Empty(t, upd)
+	assert.Len(t, del, 1)
+	assert.Equal(t, del[0].elem, 2)
 	upd, del, ins = SliceDiff(sl2, sl1) // {1,3} vs {1,2,3}
-	if len(ins) != 1 || ins[0].elem != 2 || len(upd) != 0 || len(del) != 0 {
-		t.Fail()
-	}
+	assert.Len(t, ins, 1)
+	assert.Equal(t, ins[0].elem, 2)
+	assert.Empty(t, upd)
+	assert.Empty(t, del)
 	sl1[2] = 5
 	upd, del, ins = SliceDiff(sl2, sl1) // {1,3} vs {1,2,5}
-	if len(ins) != 2 || len(upd) != 0 || len(del) != 1 {
-		t.Fail()
-	}
+	assert.Len(t, ins, 2)
+	assert.Empty(t, upd)
+	assert.Len(t, del, 1)
 }
